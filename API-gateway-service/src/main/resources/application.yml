@@ -1,43 +1,38 @@
+server:
+  port: 8080
 spring:
+  application:
+    name: api-gateway
+  datasource:
+    url: jdbc:mysql://localhost:3306/store
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+   hibernate:
+    ddl-auto: create
+   show-sql: true	
   cloud:
-      gateway:
-        routes:
-          - id: Authorization-Service
-            uri: lb://Authorization-Service
-            predicates:
-              - Path=/api/v1/auth/register, /api/v1/auth/login, /api/v1/auth/validate-token, /api/v1/auth/refresh-token
-    
-          - id: user-service
-            uri: lb://USER-SERVICE
-            predicates:
-              - Path=/api/v1/users/**
-            filters:
-              - name: CircuitBreaker
-                args:
-                  name: userServiceBreaker
-                  fallbackUri: forward:/fallback/users
-              - name: JwtAuthenticationFilter
-    
-          - id: order-service
-            uri: lb://ORDER-SERVICE
-            predicates:
-              - Path=/api/v1/orders/**
-            filters:
-              - name: JwtAuthenticationFilter
-
-resilience4j:
-  circuitbreaker:
-    instances:
-      authCircuitBreaker:
-        registerHealthIndicator: true
-        slidingWindowSize: 5
-        minimumNumberOfCalls: 10
-        permittedNumberOfCallsInHalfOpenState: 10
-        automaticTransitionFromOpenToHalfOpenEnabled: true
-        waitDurationInOpenState: 5000
-        failureRateThreshold: 50
-        eventConsumerBufferSize: 10
-        record-exceptions:
-          - java.util.concurrent.TimeoutException
-          - org.springframework.cloud.gateway.support.NotFoundException
-          - io.github.resilience4j.circuitbreaker.CallNotPermittedException
+   gateway:
+    routes:
+    - id: product-service
+      uri: http://localhost:8081
+      predicates:
+      - Path=/products/**
+    - id: sale-service
+      uri: http://localhost:8082
+      predicates:
+      - Path=/sale/**
+    - id: auth-service
+      uri: http://localhost:6070
+      predicates:
+      - Path=/api/auth/**
+eureka:
+ client:
+  serviceUrl:
+   defaultZone: http://localhost:8761/eureka/
+   instance:
+    instance-id:${spring.application.name}:${spring.application.instance_id:${random.value}}
+#jwt:
+# secret: be6906729823cb7d20d5b4fdb04edde948d424ff2dbb4a1d5498f5a0c14b3a25
+# expiration-time : 3600000
