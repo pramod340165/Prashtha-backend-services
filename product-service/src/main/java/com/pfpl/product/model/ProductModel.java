@@ -1,5 +1,4 @@
 package com.pfpl.product.model;
-
 public class ProductModel {
 
 	private Long id;

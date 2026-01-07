@@ -1,5 +1,4 @@
 package com.pfpl.product.entity;
-
 import java.io.Serializable;
 
 import jakarta.persistence.Column;

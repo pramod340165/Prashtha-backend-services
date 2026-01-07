@@ -1,36 +1,18 @@
 server:
-  port: 8080
+  port: 9090
 spring:
   application:
-    name: api-gateway
+    name: auth-server
   datasource:
     url: jdbc:mysql://localhost:3306/store
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+#   database-platform: org.hibernate.dialect.H2Dialect
    hibernate:
     ddl-auto: create
    show-sql: true	
-  cloud:
-   gateway:
-    routes:
-    - id: product-service
-      uri: http://localhost:8081
-      predicates:
-      - Path=/products/**
-      filters:
-        - name: AuthenticationFilter
-    - id: sale-service
-      uri: http://localhost:8082
-      predicates:
-      - Path=/sale/**
-      filters:
-        - name: AuthenticationFilter
-    - id: auth-service
-      uri: http://localhost:9090
-      predicates:
-      - Path=/auth/**	  
 eureka:
  client:
   serviceUrl:

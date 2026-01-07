@@ -61,14 +61,10 @@ public class ProductController {
 		}
 		return null;
 	}
-	  @GetMapping("/public")
-	    public List<String> publicProducts() {
-	        return List.of("Phone", "Laptop", "Headphones");
-	    }
-
-	    @GetMapping
-	    public List<String> securedProducts() {
-	        return List.of("Premium Laptop", "Premium Phone");
-	    }
+	@GetMapping("/public")
+	public String testd() {
+		
+		return "connected";
+	}
 
 }
